@@ -2,7 +2,8 @@ from sys import argv
 from csv import *
 from re import *
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn import tree
+from sklearn.naive_bayes import BernoulliNB
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report
 
 def main():
     # process input files
@@ -11,15 +12,14 @@ def main():
     testing_date_set = data_sets[1]
 
     # create count vectorizer and fit it with training data
-    count = CountVectorizer(token_pattern="[a-zA-Z0-9\#\@\_\$\%]{2,}",max_features=1000,lowercase=False)
+    count = CountVectorizer(token_pattern="[a-zA-Z0-9\#\@\_\$\%]{2,}",lowercase=False)
     train_bag_of_words = count.fit_transform(training_data_set["tweet_texts"])
 
     # transform the test data into bag of words creaed with fit_transform
     test_bag_of_words = count.transform(testing_date_set["tweet_texts"])
 
     # decision tree model
-    min_samples_leaf = int(len(training_data_set["tweet_texts"]) * 0.01)
-    clf = tree.DecisionTreeClassifier(min_samples_leaf=min_samples_leaf,criterion='entropy',random_state=0)
+    clf = BernoulliNB()
     model = clf.fit(train_bag_of_words, training_data_set["sentiments"])
 
     # predict
