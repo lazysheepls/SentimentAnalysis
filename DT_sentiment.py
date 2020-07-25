@@ -1,10 +1,34 @@
 from sys import argv
 from csv import *
 from re import *
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn import tree
 
 def main():
-    # pass
-    process_input_files()
+    # process input files
+    data_sets = process_input_files()
+    training_data_set = data_sets[0]
+    testing_date_set = data_sets[1]
+
+    # create count vectorizer and fit it with training data
+    count = CountVectorizer(token_pattern="[a-zA-Z0-9\#\@\_\$\%]{2,}",max_features=1000)
+    train_bag_of_words = count.fit_transform(training_data_set["tweet_texts"])
+
+    # transform the test data into bag of words creaed with fit_transform
+    test_bag_of_words = count.transform(testing_date_set["tweet_texts"])
+
+    # decision tree model
+    min_samples_leaf = int(len(training_data_set["tweet_texts"]) * 0.01)
+    clf = tree.DecisionTreeClassifier(min_samples_leaf=min_samples_leaf,criterion='entropy',random_state=0)
+    model = clf.fit(train_bag_of_words, training_data_set["sentiments"])
+
+    # predict
+    predicted = model.predict(test_bag_of_words)
+
+    # print result
+    for i in range(len(testing_date_set["tweet_texts"])):
+        print(testing_date_set["instance_numbers"][i],predicted[i])
+
 
 def process_input_files():
     # get file names
@@ -18,8 +42,7 @@ def process_input_files():
     # process tweet texts
     training_data_set["tweet_texts"] = process_tweet_texts(training_data_set["tweet_texts"])
     testing_date_set["tweet_texts"] = process_tweet_texts(testing_date_set["tweet_texts"])
-    pass
-    
+    return (training_data_set,testing_date_set)
 
 def read_training_file(file_name):
     data_set = dict()
@@ -59,7 +82,8 @@ def process_tweet_texts(tweet_texts):
         tweet_text = sub(r"[^a-zA-Z0-9\s\#\@\_\$\%]","",tweet_text)
         # append clean tweet text to list
         clean_tweet_texts.append(tweet_text)
-    print(clean_tweet_texts)
+    # #DEBUG:
+    # print(clean_tweet_texts)
     return clean_tweet_texts
 
 
