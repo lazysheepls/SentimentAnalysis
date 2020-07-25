@@ -3,9 +3,6 @@ from csv import *
 from re import *
 
 def main():
-    test_process_tweet_text("Lol, k. â€œ@JetBlue: Our fleet's on fleek. http://t.co/IUX94Rgc83	neutral")
-    test_process_tweet_text("JetBlue's CEO battles to appease passengers and Wall Street - Waterbury Republican American http://t.co/5t4FpCGREJ	neutral")
-    test_process_tweet_text("Lol, k. â€œ@JetBlue: Our fleet's on fleek. http://t.co/IUX94Rgc83 Don't be like the other airlines!!  http://t.co/WHAGPknnLF	negative")
     # pass
     process_input_files()
 
@@ -21,6 +18,7 @@ def process_input_files():
     # process tweet texts
     training_data_set["tweet_texts"] = process_tweet_texts(training_data_set["tweet_texts"])
     testing_date_set["tweet_texts"] = process_tweet_texts(testing_date_set["tweet_texts"])
+    pass
     
 
 def read_training_file(file_name):
@@ -53,15 +51,16 @@ def read_testing_file(file_name):
     return data_set
 
 def process_tweet_texts(tweet_texts):
-    processed_tweet_texts = list()
+    clean_tweet_texts = list()
     for tweet_text in tweet_texts:
         # remove url
-        tweet_text = sub(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"," ",tweet_text)
+        tweet_text = sub(r"http[s]?:\/\/\S+"," ",tweet_text)
         # remove junk characters
-        tweet_text = sub(r"[^#@_$%\sa-zA-Z\d]","",tweet_text)
-        # add process tweet
-        process_tweet_texts.append(tweet_text)
-    return processed_tweet_texts
+        tweet_text = sub(r"[^a-zA-Z0-9\s\#\@\_\$\%]","",tweet_text)
+        # append clean tweet text to list
+        clean_tweet_texts.append(tweet_text)
+    print(clean_tweet_texts)
+    return clean_tweet_texts
 
 
 if __name__ == '__main__':
