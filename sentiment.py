@@ -11,7 +11,7 @@ def main():
     testing_date_set = data_sets[1]
 
     # create count vectorizer and fit it with training data
-    count = CountVectorizer(token_pattern="[a-zA-Z0-9\#\@\_\$\%]{2,}",max_features=1000,lowercase=False)
+    count = CountVectorizer(token_pattern="[a-zA-Z0-9\#\@\_\$\%]{2,}",max_features=1000)
     train_bag_of_words = count.fit_transform(training_data_set["tweet_texts"])
 
     # transform the test data into bag of words creaed with fit_transform
@@ -82,6 +82,8 @@ def process_tweet_texts(tweet_texts):
         tweet_text = sub(r"[^a-zA-Z0-9\s\#\@\_\$\%]","",tweet_text)
         # append clean tweet text to list
         clean_tweet_texts.append(tweet_text)
+    # #DEBUG:
+    # print(clean_tweet_texts)
     return clean_tweet_texts
 
 
