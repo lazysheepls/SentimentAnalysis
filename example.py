@@ -12,7 +12,8 @@ def predict_and_test(model, X_test_bag_of_words):
     predicted_y = model.predict(X_test_bag_of_words)
     print(y_test, predicted_y)
     print(model.predict_proba(X_test_bag_of_words))
-    print(classification_report(y_test, predicted_y,zero_division=0))
+    print(classification_report(y_test, predicted_y))
+    # print(classification_report(y_test, predicted_y,zero_division=0))
 
 # Create text
 text_data = np.array(['I love Brazil. Brazil is best',

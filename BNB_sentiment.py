@@ -9,16 +9,16 @@ def main():
     # process input files
     data_sets = process_input_files()
     training_data_set = data_sets[0]
-    testing_date_set = data_sets[1]
+    testing_data_set = data_sets[1]
 
     # create count vectorizer and fit it with training data
     count = CountVectorizer(token_pattern="[a-zA-Z0-9\#\@\_\$\%]{2,}",lowercase=False)
     train_bag_of_words = count.fit_transform(training_data_set["tweet_texts"])
 
     # transform the test data into bag of words creaed with fit_transform
-    test_bag_of_words = count.transform(testing_date_set["tweet_texts"])
+    test_bag_of_words = count.transform(testing_data_set["tweet_texts"])
 
-    # decision tree model
+    # BNB model
     clf = BernoulliNB()
     model = clf.fit(train_bag_of_words, training_data_set["sentiments"])
 
@@ -26,8 +26,8 @@ def main():
     predicted = model.predict(test_bag_of_words)
 
     # print result
-    for i in range(len(testing_date_set["tweet_texts"])):
-        print(testing_date_set["instance_numbers"][i],predicted[i])
+    for i in range(len(testing_data_set["tweet_texts"])):
+        print(testing_data_set["instance_numbers"][i],predicted[i])
 
 
 def process_input_files():
@@ -37,12 +37,12 @@ def process_input_files():
 
     # read files(\t delimiter)
     training_data_set = read_training_file(training_file)
-    testing_date_set = read_testing_file(testing_file)
+    testing_data_set = read_testing_file(testing_file)
     
     # process tweet texts
     training_data_set["tweet_texts"] = process_tweet_texts(training_data_set["tweet_texts"])
-    testing_date_set["tweet_texts"] = process_tweet_texts(testing_date_set["tweet_texts"])
-    return (training_data_set,testing_date_set)
+    testing_data_set["tweet_texts"] = process_tweet_texts(testing_data_set["tweet_texts"])
+    return (training_data_set,testing_data_set)
 
 def read_training_file(file_name):
     data_set = dict()
